@@ -17,6 +17,8 @@ struct block{
     block* down;
     block* left;
     block* right;
+    block* prev = NULL;
+    block* next = NULL;
     bool visit = false;
 };
 
@@ -103,7 +105,7 @@ block* create_map(block* MAP){
     return MAP;
 }
 
-void reconstruct_map(block* now, int dis, int check){
+void reconstruct_map(block* now, block* prev, int dis, int check){
     if(now && now->exist >= 0){
         cout<<"("<<now->y<<" "<<now->x<<")";
         if(now->exist == 0 && now->visit == true){
@@ -112,10 +114,14 @@ void reconstruct_map(block* now, int dis, int check){
         else if(now->exist == 0){
             now->exist = dis;
             now->visit = true;
+            now->prev = prev;
+            now->prev->next = now;
         }
         else if(now->exist > 0){
             if(now->exist > dis){
                 now->exist = dis;
+                now->prev = prev;
+                now->prev->next = now;
             }
             else
                 return;
@@ -123,38 +129,38 @@ void reconstruct_map(block* now, int dis, int check){
         switch(check){
         case 0:
             {
-                reconstruct_map(now->up, dis+1, 1);
-                reconstruct_map(now->down, dis+1, 2);
-                reconstruct_map(now->right, dis+1, 3);
-                reconstruct_map(now->left, dis+1, 4);
+                reconstruct_map(now->up, now, dis+1, 1);
+                reconstruct_map(now->down, now, dis+1, 2);
+                reconstruct_map(now->right, now, dis+1, 3);
+                reconstruct_map(now->left, now, dis+1, 4);
                 break;
             }
         case 1:
             {
-                reconstruct_map(now->up, dis+1, 1);
-                reconstruct_map(now->right, dis+1, 3);
-                reconstruct_map(now->left, dis+1, 4);
+                reconstruct_map(now->up, now, dis+1, 1);
+                reconstruct_map(now->right, now, dis+1, 3);
+                reconstruct_map(now->left, now, dis+1, 4);
                 break;
             }
         case 2:
             {
-                reconstruct_map(now->down, dis+1, 2);
-                reconstruct_map(now->right, dis+1, 3);
-                reconstruct_map(now->left, dis+1, 4);
+                reconstruct_map(now->down, now, dis+1, 2);
+                reconstruct_map(now->right, now, dis+1, 3);
+                reconstruct_map(now->left, now, dis+1, 4);
                 break;
             }
         case 3:
             {
-                reconstruct_map(now->up, dis+1, 1);
-                reconstruct_map(now->down, dis+1, 2);
-                reconstruct_map(now->right, dis+1, 3);
+                reconstruct_map(now->up, now, dis+1, 1);
+                reconstruct_map(now->down, now, dis+1, 2);
+                reconstruct_map(now->right, now, dis+1, 3);
                 break;
             }
         case 4:
             {
-                reconstruct_map(now->up, dis+1, 1);
-                reconstruct_map(now->down, dis+1, 2);
-                reconstruct_map(now->left, dis+1, 4);
+                reconstruct_map(now->up, now, dis+1, 1);
+                reconstruct_map(now->down, now, dis+1, 2);
+                reconstruct_map(now->left, now, dis+1, 4);
                 break;
             }
         }
@@ -204,7 +210,7 @@ int main()
         now = head;
     }
     robot->exist = 0;
-    reconstruct_map(robot, 0, 0);
+    reconstruct_map(robot, robot, 0, 0);
     head = Map;
     now = head;
     for(int i = 0; i < m; i++){
