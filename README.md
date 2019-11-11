@@ -9,8 +9,6 @@
 
 using namespace std;
 
-int m, n, B;
-
 struct block{
     int exist;
     int x;
@@ -19,7 +17,11 @@ struct block{
     block* down;
     block* left;
     block* right;
+    bool visit = false;
 };
+
+block* Map;
+int m, n, B;
 
 block* generate_row(int n, int y){
     int j;
@@ -46,14 +48,14 @@ block* generate_row(int n, int y){
     return first;
 }
 
-block* generate_map(int m, int n){
-    block* row_1 = generate_row(n, 0);
+block* generate_map(int M, int N){
+    block* row_1 = generate_row(N, 0);
     block* b_11 = row_1;
-    for(int i = 1; i<m; i++){
-        block* row_2 = generate_row(n, i);
+    for(int i = 1; i<M; i++){
+        block* row_2 = generate_row(N, i);
         block* row_11 = row_1;
         block* row_21 = row_2;
-        for(int j = 0; j<n; j++){
+        for(int j = 0; j<N; j++){
             row_1->down = row_2;
             row_2->up = row_1;
             if(row_1->right != NULL){
@@ -69,8 +71,8 @@ block* generate_map(int m, int n){
     return b_11;
 }
 
-block* create_map(block* Map){
-    block* head = Map;
+block* create_map(block* MAP){
+    block* head = MAP;
     block* now = head;
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
@@ -98,7 +100,24 @@ block* create_map(block* Map){
         head = head->down;
         now = head;
     }
-    return Map;
+    return MAP;
+}
+
+void reconstruct_map(block* now, int dis){
+    if(now){
+        if(now->exist == 0 && now->visit == false){
+            now->exist = dis;
+            now->visit = true;
+            reconstruct_map(now->up, dis+1);
+            reconstruct_map(now->down, dis+1);
+            reconstruct_map(now->right, dis+1);
+            reconstruct_map(now->left, dis+1);
+        }
+        if(now->exist == 1 && now->visit == false){
+            now->visit = true;
+            now->exist = -1;
+        }
+    }
 }
 
 int main()
@@ -111,7 +130,7 @@ int main()
     file>>m>>n>>B;*/
     cin>>m>>n>>B;
     cout<<"m = "<<m<<" n = "<<n<<" B = "<<B<<endl;
-    block* Map = generate_map(m, n);
+    Map = generate_map(m, n);
     block* head = Map;
     block* now = head;
     /*for(int i = 0; i < m; i++){
@@ -127,6 +146,26 @@ int main()
     head = Map;
     now = head;*/
     Map = create_map(Map);
+    block* robot;
+    for(int i = 0; i < m; i++){
+        int stop = 0;
+        if(stop == 1)
+            break;
+        for(int j = 0; j < n; j++){
+            if(now->exist == -7){
+                robot = now;
+                stop = 1;
+                break;
+            }
+            now = now->right;
+        }
+        head = head->down;
+        now = head;
+    }
+    robot->exist = 0;
+    reconstruct_map(robot, 0);
+    head = Map;
+    now = head;
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
             //cout<<"("<<now->y<<" "<<now->x<<")";
