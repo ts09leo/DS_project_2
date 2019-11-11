@@ -210,7 +210,13 @@ int main()
         now = head;
     }
     robot->exist = 0;
-    reconstruct_map(robot, robot, 0, 0);
+    block* stop = new block;
+    stop -> exist = -777;
+    stop->down = stop->left = stop->right = stop->up = NULL;
+    stop->x = stop->y = -777;
+    stop->next = robot;
+    stop->prev = NULL;
+    reconstruct_map(robot, stop, 0, 0);
     head = Map;
     now = head;
     for(int i = 0; i < m; i++){
