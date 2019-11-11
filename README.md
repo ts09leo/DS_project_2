@@ -86,7 +86,7 @@ block* create_map(block* MAP){
                 }
             case '1':
                 {
-                    now->exist = 1;
+                    now->exist = -1;
                     break;
                 }
             case '0':
@@ -103,19 +103,60 @@ block* create_map(block* MAP){
     return MAP;
 }
 
-void reconstruct_map(block* now, int dis){
-    if(now){
-        if(now->exist == 0 && now->visit == false){
+void reconstruct_map(block* now, int dis, int check){
+    if(now && now->exist >= 0){
+        cout<<"("<<now->y<<" "<<now->x<<")";
+        if(now->exist == 0 && now->visit == true){
+            return;
+        }
+        else if(now->exist == 0){
             now->exist = dis;
             now->visit = true;
-            reconstruct_map(now->up, dis+1);
-            reconstruct_map(now->down, dis+1);
-            reconstruct_map(now->right, dis+1);
-            reconstruct_map(now->left, dis+1);
         }
-        if(now->exist == 1 && now->visit == false){
-            now->visit = true;
-            now->exist = -1;
+        else if(now->exist > 0){
+            if(now->exist > dis){
+                now->exist = dis;
+            }
+            else
+                return;
+        }
+        switch(check){
+        case 0:
+            {
+                reconstruct_map(now->up, dis+1, 1);
+                reconstruct_map(now->down, dis+1, 2);
+                reconstruct_map(now->right, dis+1, 3);
+                reconstruct_map(now->left, dis+1, 4);
+                break;
+            }
+        case 1:
+            {
+                reconstruct_map(now->up, dis+1, 1);
+                reconstruct_map(now->right, dis+1, 3);
+                reconstruct_map(now->left, dis+1, 4);
+                break;
+            }
+        case 2:
+            {
+                reconstruct_map(now->down, dis+1, 2);
+                reconstruct_map(now->right, dis+1, 3);
+                reconstruct_map(now->left, dis+1, 4);
+                break;
+            }
+        case 3:
+            {
+                reconstruct_map(now->up, dis+1, 1);
+                reconstruct_map(now->down, dis+1, 2);
+                reconstruct_map(now->right, dis+1, 3);
+                break;
+            }
+        case 4:
+            {
+                reconstruct_map(now->up, dis+1, 1);
+                reconstruct_map(now->down, dis+1, 2);
+                reconstruct_map(now->left, dis+1, 4);
+                break;
+            }
         }
     }
 }
@@ -163,12 +204,15 @@ int main()
         now = head;
     }
     robot->exist = 0;
-    reconstruct_map(robot, 0);
+    reconstruct_map(robot, 0, 0);
     head = Map;
     now = head;
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
             //cout<<"("<<now->y<<" "<<now->x<<")";
+            if(now->exist<=9 && now->exist >= 0){
+                cout<<" ";
+            }
             cout<<now->exist;
             now = now->right;
         }
