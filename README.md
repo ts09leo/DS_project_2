@@ -6,6 +6,7 @@
 #include <queue>
 #include <stdlib.h>
 #include <stdio.h>
+#include <vector>
 
 using namespace std;
 
@@ -167,11 +168,12 @@ void reconstruct_map(block* now, block* prev, int dis, int check){
     }
 }
 
-int cmp(const void* a, const void* b){
-    block *va = (block*) a;
-    block *vb = (block*) b;
-    return(va->exist) - (vb->exist);
+bool cmp_1(const block* a, const block* b){
+    return a->exist >= b->exist;
 }
+
+/*bool cmp_2(const block* a, const block* b){
+}*/
 
 int main()
 {
@@ -245,15 +247,15 @@ int main()
         now = head;
     }
     cout<<endl<<num_Block<<endl;
-    block* sort_Block[num_Block];
+    vector<block*> sort_Block;
+    //block* sort_Block[num_Block];
     int k = 0;
     head = Map;
     now = head;
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
             if(now->exist >= 0){
-                sort_Block[k] = now;
-                k += 1;
+                sort_Block.push_back(now);
             }
             now = now->right;
         }
@@ -263,10 +265,12 @@ int main()
     for(int i = 0; i < num_Block; i++){
         cout<<"("<<sort_Block[i]->y<<" "<<sort_Block[i]->x<<")";
     }
-    qsort(sort_Block, num_Block, sizeof(block*), cmp);
+    sort(sort_Block.begin(), sort_Block.end(), cmp_1);
+    //sort(sort_Block.begin(), sort_Block.end(), cmp_2);
+    //qsort(sort_Block, num_Block, sizeof(block*), cmp);
     cout<<endl<<"After sorting"<<endl;
     for(int i = 0; i < num_Block; i++){
-        cout<<sort_Block[i]->exist<<" ";
+        cout<<sort_Block[i]->exist<<"("<<sort_Block[i]->y<<" "<<sort_Block[i]->x<<")"<<" ";
     }
     cout<<endl;
     return 0;
