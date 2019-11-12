@@ -167,6 +167,12 @@ void reconstruct_map(block* now, block* prev, int dis, int check){
     }
 }
 
+int cmp(const void* a, const void* b){
+    block *va = (block*) a;
+    block *vb = (block*) b;
+    return(va->exist) - (vb->exist);
+}
+
 int main()
 {
     /*fstream file("floor.data");
@@ -219,11 +225,17 @@ int main()
     reconstruct_map(robot, stop, 0, 0);
     head = Map;
     now = head;
+    int num_Block = 0;
+    cout<<endl<<endl;
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
             //cout<<"("<<now->y<<" "<<now->x<<")";
             if(now->exist<=9 && now->exist >= 0){
                 cout<<" ";
+            }
+            if(now->exist >= 0){
+                num_Block += 1;
+                now->visit = false;
             }
             cout<<now->exist;
             now = now->right;
@@ -232,5 +244,30 @@ int main()
         head = head->down;
         now = head;
     }
+    cout<<endl<<num_Block<<endl;
+    block* sort_Block[num_Block];
+    int k = 0;
+    head = Map;
+    now = head;
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++){
+            if(now->exist >= 0){
+                sort_Block[k] = now;
+                k += 1;
+            }
+            now = now->right;
+        }
+        head = head->down;
+        now = head;
+    }
+    for(int i = 0; i < num_Block; i++){
+        cout<<"("<<sort_Block[i]->y<<" "<<sort_Block[i]->x<<")";
+    }
+    qsort(sort_Block, num_Block, sizeof(block*), cmp);
+    cout<<endl<<"After sorting"<<endl;
+    for(int i = 0; i < num_Block; i++){
+        cout<<sort_Block[i]->exist<<" ";
+    }
+    cout<<endl;
     return 0;
 }
