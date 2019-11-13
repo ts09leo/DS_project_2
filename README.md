@@ -292,8 +292,9 @@ int main()
     robot->visit = true;
     for(int i = 0; i < num_Block; i++){
         block* going = sort_Block[i];
-        cout<<going->exist<<endl;
+        //cout<<going->exist<<endl;
         if(going->visit == false){
+            cout<<going->exist*2<<endl;
             cout<<robot->y<<" "<<robot->x<<endl;
             walk(going);
             cout<<robot->y<<" "<<robot->x<<endl;
