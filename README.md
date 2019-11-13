@@ -172,8 +172,24 @@ bool cmp_1(const block* a, const block* b){
     return a->exist >= b->exist;
 }
 
-/*bool cmp_2(const block* a, const block* b){
-}*/
+void walk(block* to_go){
+    int n = to_go->exist;
+    block* print[n];
+    block* now = to_go;
+    for(int i = 0; i < n; i++){
+        print[i] = now;
+        now->visit = true;
+        now = now->prev;
+    }
+    for(int i = n-1; i >= 0 ; i--){
+        cout<<print[i]->y<<" "<<print[i]->x<<endl;
+    }
+    now = to_go;
+    for(int i = 1; i < n; i++){
+        cout<<now->y<<" "<<now->x<<endl;
+        now = now->prev;
+    }
+}
 
 int main()
 {
@@ -273,5 +289,25 @@ int main()
         cout<<sort_Block[i]->exist<<"("<<sort_Block[i]->y<<" "<<sort_Block[i]->x<<")"<<" ";
     }
     cout<<endl;
+    robot->visit = true;
+    for(int i = 0; i < num_Block; i++){
+        block* going = sort_Block[i];
+        cout<<going->exist<<endl;
+        if(going->visit == false){
+            cout<<robot->y<<" "<<robot->x<<endl;
+            walk(going);
+            cout<<robot->y<<" "<<robot->x<<endl;
+        }
+        sort_Block.pop_back();
+    }
+    for(int i = 0; i < num_Block; i++){
+        if(sort_Block[i]->visit == false){
+            cout<<sort_Block[i]->y<<" "<<sort_Block[i]->x<<" do not visit!!!"<<endl;
+            break;
+        }
+        else if(i == num_Block-1){
+            cout<<"true"<<endl;
+        }
+    }
     return 0;
 }
