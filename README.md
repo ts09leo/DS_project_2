@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
+#define MAX 1000000
 
 using namespace std;
 
@@ -25,6 +26,7 @@ struct block{
 
 block* Map;
 int m, n, B;
+block re[MAX];
 
 block* generate_row(int n, int y){
     int j;
