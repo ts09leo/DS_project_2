@@ -175,6 +175,12 @@ bool cmp_1(const block* a, const block* b){
 }
 
 void walk(block* to_go){
+    char out[] = "final.path";
+    fstream fuck;
+    fuck.open(out, ios::app);
+    if(!fuck){
+        cout<<"G8"<<endl;
+    }
     int n = to_go->exist;
     block* print[n];
     block* now = to_go;
@@ -185,16 +191,29 @@ void walk(block* to_go){
     }
     for(int i = n-1; i >= 0 ; i--){
         cout<<print[i]->y<<" "<<print[i]->x<<endl;
+        fuck<<print[i]->y<<" "<<print[i]->x<<endl;
     }
     now = to_go;
     for(int i = 0; i < n; i++){
         cout<<now->y<<" "<<now->x<<endl;
+        fuck<<now->y<<" "<<now->x<<endl;
         now = now->prev;
     }
 }
 
 int main()
 {
+    char out[] = "final.path";
+    char write_map[] = "map.change";
+    fstream fuck, ma_de;
+    fuck.open(out, ios::app);
+    if(!fuck){
+        cout<<"G8"<<endl;
+    }
+    ma_de.open(write_map, ios::out);
+    if(!ma_de){
+        cout<<"C9"<<endl;
+    }
     fstream file("floor.data");
     if(!file){
         cout<<"can't read file"<<endl;
@@ -251,16 +270,27 @@ int main()
         for(int j = 0; j < n; j++){
             //cout<<"("<<now->y<<" "<<now->x<<")";
             if(now->exist<=9 && now->exist >= 0){
+                cout<<"   ";
+                ma_de<<"   ";
+            }
+            else if(now->exist<0 || now->exist<=99){
+                cout<<"  ";
+                ma_de<<"  ";
+            }
+            else{
                 cout<<" ";
+                ma_de<<" ";
             }
             if(now->exist >= 0){
                 num_Block += 1;
                 now->visit = false;
             }
             cout<<now->exist;
+            ma_de<<now->exist;
             now = now->right;
         }
         cout<<endl;
+        ma_de<<endl;
         head = head->down;
         now = head;
     }
@@ -297,9 +327,12 @@ int main()
         //cout<<going->exist<<endl;
         if(going->visit == false){
             cout<<going->exist*2<<endl;
+            fuck<<going->exist*2<<endl;
             cout<<robot->y<<" "<<robot->x<<endl;
+            fuck<<robot->y<<" "<<robot->x<<endl;
             walk(going);
             cout<<robot->y<<" "<<robot->x<<endl;
+            fuck<<robot->y<<" "<<robot->x<<endl;
         }
         sort_Block.pop_back();
     }
