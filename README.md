@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
-#define MAX 1000000
+#define MAX 49800000
 
 using namespace std;
 
@@ -79,10 +79,16 @@ block* generate_map(int M, int N){
 block* create_map(block* MAP){
     block* head = MAP;
     block* now = head;
+    fstream file("floor.data");
+    if(!file){
+        cout<<"can't read file"<<endl;
+    }
+    file>>m>>n>>B;
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
             char temp;
-            cin>>temp;
+            //cin>>temp;
+            file>>temp;
             switch(temp){
             case 'R':
                 {
@@ -225,6 +231,7 @@ int main()
     Map = generate_map(m, n);
     block* head = Map;
     block* now = head;
+    long long step = 0;
     /*for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
             //cout<<"("<<now->y<<" "<<now->x<<")";
@@ -328,6 +335,9 @@ int main()
         if(going->visit == false){
             cout<<going->exist*2<<endl;
             fuck<<going->exist*2<<endl;
+            step += going->exist*2;
+            if(step<0)
+                return 2;
             cout<<robot->y<<" "<<robot->x<<endl;
             fuck<<robot->y<<" "<<robot->x<<endl;
             walk(going);
@@ -343,6 +353,7 @@ int main()
         }
         else if(i == num_Block-1){
             cout<<"true"<<endl;
+            cout<<step<<endl;
         }
     }
     /*char out[] = "floor.data";
