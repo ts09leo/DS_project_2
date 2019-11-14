@@ -312,5 +312,30 @@ int main()
             cout<<"true"<<endl;
         }
     }
+    char out[] = "floor.data";
+    fstream fuck;
+    fuck.open(out, ios::out);
+    if(!fuck){
+        cout<<"G8"<<endl;
+    }
+    fuck<<"100 "<<"100 "<<"250"<<endl;
+    for(int i = 0; i < 100; i++){
+        for(int j = 0; j < 100; j++){
+            if(i==0 || i==99 || j==0 || j==99)
+            fuck<<"1";
+            else if(i == 98 && j == 1){
+                fuck<<"R";
+            }
+            else if(i == 50&& j == 50){
+                fuck<<"0";
+            }
+            else if(i == j){
+                fuck<<"1";
+            }
+            else
+                fuck<<"0";
+        }
+        fuck<<endl;
+    }
     return 0;
 }
