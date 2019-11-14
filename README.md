@@ -110,7 +110,7 @@ block* create_map(block* MAP){
 
 void reconstruct_map(block* now, block* prev, int dis, int check){
     if(now && now->exist >= 0){
-        cout<<"("<<now->y<<" "<<now->x<<")";
+        //cout<<"("<<now->y<<" "<<now->x<<")";
         if(now->exist == 0 && now->visit == true){
             return;
         }
@@ -187,7 +187,7 @@ void walk(block* to_go){
         cout<<print[i]->y<<" "<<print[i]->x<<endl;
     }
     now = to_go;
-    for(int i = 1; i < n; i++){
+    for(int i = 0; i < n; i++){
         cout<<now->y<<" "<<now->x<<endl;
         now = now->prev;
     }
@@ -195,13 +195,13 @@ void walk(block* to_go){
 
 int main()
 {
-    /*fstream file("floor.data");
+    fstream file("floor.data");
     if(!file){
         cout<<"can't read file"<<endl;
         return 1;
     }
-    file>>m>>n>>B;*/
-    cin>>m>>n>>B;
+    file>>m>>n>>B;
+    //cin>>m>>n>>B;
     cout<<"m = "<<m<<" n = "<<n<<" B = "<<B<<endl;
     Map = generate_map(m, n);
     block* head = Map;
@@ -280,17 +280,17 @@ int main()
         head = head->down;
         now = head;
     }
-    for(int i = 0; i < num_Block; i++){
+    /*for(int i = 0; i < num_Block; i++){
         cout<<"("<<sort_Block[i]->y<<" "<<sort_Block[i]->x<<")";
-    }
+    }*/
     sort(sort_Block.begin(), sort_Block.end(), cmp_1);
     //sort(sort_Block.begin(), sort_Block.end(), cmp_2);
     //qsort(sort_Block, num_Block, sizeof(block*), cmp);
     cout<<endl<<"After sorting"<<endl;
-    for(int i = 0; i < num_Block; i++){
+    /*for(int i = 0; i < num_Block; i++){
         cout<<sort_Block[i]->exist<<"("<<sort_Block[i]->y<<" "<<sort_Block[i]->x<<")"<<" ";
     }
-    cout<<endl;
+    cout<<endl;*/
     robot->visit = true;
     for(int i = 0; i < num_Block; i++){
         block* going = sort_Block[i];
@@ -312,7 +312,7 @@ int main()
             cout<<"true"<<endl;
         }
     }
-    char out[] = "floor.data";
+    /*char out[] = "floor.data";
     fstream fuck;
     fuck.open(out, ios::out);
     if(!fuck){
@@ -336,6 +336,6 @@ int main()
                 fuck<<"0";
         }
         fuck<<endl;
-    }
+    }*/
     return 0;
 }
