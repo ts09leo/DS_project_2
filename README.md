@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <vector>
 #define MAX 49800000
+//
 
 using namespace std;
 
@@ -182,7 +183,7 @@ bool cmp_1(const block* a, const block* b){
 }
 
 void walk(block* to_go){
-    char out[] = "final.path";
+    //char out[] = "final.path";
     /*fstream fuck;
     fuck.open(out, ios::app);
     if(!fuck){
@@ -191,23 +192,60 @@ void walk(block* to_go){
     int n = to_go->exist;
     block* print[n];
     block* now = to_go;
-    for(int i = 0; i < n; i++){
-        print[i] = now;
+    for(int i = n-1; i >= 0; i--){
+        re[current+i] = now;
         now->visit = true;
         now = now->prev;
     }
-    for(int i = n-1; i >= 0 ; i--, current++){
+    current += n;
+    /*for(int i = n-1; i >= 0 ; i--, current++){
         cout<<print[i]->y<<" "<<print[i]->x<<endl;
         //fuck<<print[i]->y<<" "<<print[i]->x<<endl;
         re[current] = print[i];
-    }
+    }*/
     now = to_go;
-    for(int i = 0; i < n; i++){
-        cout<<now->y<<" "<<now->x<<endl;
-        //fuck<<now->y<<" "<<now->x<<endl;
-        re[current+i] = now;
-        now = now->prev;
+    if(now->down->exist>=0 && now->down->visit == false){
+        now = now->down;
+        for(int i = 0; i < n; i++){
+            re[current+i] = now;
+            now->visit = true;
+            now = now->prev;
+        }
     }
+    else if(now->up->exist>=0 && now->up->visit == false){
+        now = now->up;
+        for(int i = 0; i < n; i++){
+            re[current+i] = now;
+            now->visit = true;
+            now = now->prev;
+        }
+    }
+    else if(now->right->exist>=0 && now->right->visit == false){
+        now = now->right;
+        for(int i = 0; i < n; i++){
+            re[current+i] = now;
+            now->visit = true;
+            now = now->prev;
+        }
+    }
+    else if(now->left->exist>=0 && now->left->visit == false){
+        now = now->left;
+        for(int i = 0; i < n; i++){
+            re[current+i] = now;
+            now->visit = true;
+            now = now->prev;
+        }
+    }
+    else{
+        now = now->prev;
+        for(int i = 0; i < n; i++){
+            //cout<<now->y<<" "<<now->x<<endl;
+            //fuck<<now->y<<" "<<now->x<<endl;
+            re[current+i] = now;
+            now = now->prev;
+        }
+    }
+    current += n;
 }
 
 int main()
@@ -230,7 +268,7 @@ int main()
     }
     file>>m>>n>>B;
     //cin>>m>>n>>B;
-    cout<<"m = "<<m<<" n = "<<n<<" B = "<<B<<endl;
+    //cout<<"m = "<<m<<" n = "<<n<<" B = "<<B<<endl;
     Map = generate_map(m, n);
     block* head = Map;
     block* now = head;
@@ -275,12 +313,12 @@ int main()
     head = Map;
     now = head;
     int num_Block = 0;
-    cout<<endl<<endl;
+    //cout<<endl<<endl;
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
             //cout<<"("<<now->y<<" "<<now->x<<")";
-            if(now->exist<=9 && now->exist >= 0){
-                cout<<"   ";
+            /*if(now->exist<=9 && now->exist >= 0){
+                //cout<<"   ";
                 ma_de<<"   ";
             }
             else if(now->exist<0 || now->exist<=99){
@@ -290,21 +328,21 @@ int main()
             else{
                 cout<<" ";
                 ma_de<<" ";
-            }
+            }*/
             if(now->exist >= 0){
                 num_Block += 1;
                 now->visit = false;
             }
-            cout<<now->exist;
-            ma_de<<now->exist;
+            //cout<<now->exist;
+            //ma_de<<now->exist;
             now = now->right;
         }
-        cout<<endl;
-        ma_de<<endl;
+        //cout<<endl;
+        //ma_de<<endl;
         head = head->down;
         now = head;
     }
-    cout<<endl<<num_Block<<endl;
+    //cout<<endl<<num_Block<<endl;
     vector<block*> sort_Block;
     //block* sort_Block[num_Block];
     int k = 0;
@@ -326,7 +364,7 @@ int main()
     sort(sort_Block.begin(), sort_Block.end(), cmp_1);
     //sort(sort_Block.begin(), sort_Block.end(), cmp_2);
     //qsort(sort_Block, num_Block, sizeof(block*), cmp);
-    cout<<endl<<"After sorting"<<endl;
+    //cout<<endl<<"After sorting"<<endl;
     /*for(int i = 0; i < num_Block; i++){
         cout<<sort_Block[i]->exist<<"("<<sort_Block[i]->y<<" "<<sort_Block[i]->x<<")"<<" ";
     }
@@ -334,7 +372,7 @@ int main()
     robot->visit = true;
     //cout<<going->exist*2<<endl;
     //fuck<<going->exist*2<<endl;
-    cout<<robot->y<<" "<<robot->x<<endl;
+    //cout<<robot->y<<" "<<robot->x<<endl;
     //fuck<<robot->y<<" "<<robot->x<<endl;
     re[current] = robot;
     current += 1;
@@ -342,24 +380,26 @@ int main()
         block* going = sort_Block[i];
         //cout<<going->exist<<endl;
         if(going->visit == false){
+            //current -= 1;
             walk(going);
             step += going->exist*2;
             if(step<0)
                 return 2;
-            cout<<robot->y<<" "<<robot->x<<endl;
+            //cout<<robot->y<<" "<<robot->x<<endl;
             //fuck<<robot->y<<" "<<robot->x<<endl;
-            re[current] = robot;
-            current += 1;
+            //re[current] = robot;
+            //current += 1;
         }
         sort_Block.pop_back();
     }
     fuck<<step<<endl;
-    ============================================================================================================================
-    for(int i = 0; i < step+1; i++){
-        fuck<<re[i]->y<<" "<<re[i]->x<<endl;    
+    re[step-1] = robot;
+    //============================================================================================================================
+    for(int i = 0; i < step; i++){
+        fuck<<re[i]->y<<" "<<re[i]->x<<endl;
         //fuck<<re[i]->y<<" "<<re[i]->x<<endl;
     }
-    =========================================================================================================================================
+    //=========================================================================================================================================
     for(int i = 0; i < num_Block; i++){
         if(sort_Block[i]->visit == false){
             cout<<sort_Block[i]->y<<" "<<sort_Block[i]->x<<" do not visit!!!"<<endl;
@@ -367,7 +407,7 @@ int main()
         }
         else if(i == num_Block-1){
             cout<<"true"<<endl;
-            cout<<step<<endl;
+            //cout<<step<<endl;
         }
     }
     /*char out[] = "floor.data";
